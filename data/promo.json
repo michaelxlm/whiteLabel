@@ -2,10 +2,10 @@
   "brand": "xuliming.com 白标开店",
   "brandUrl": "https://xuliming.com/white-label.html",
   "examples": [
-    { "slug": "content", "label": "内容站示例", "url": "https://xuliming.com/" },
-    { "slug": "tool", "label": "工具站示例", "url": "https://xuliming.com/" },
+    { "slug": "content", "label": "内容站示例", "url": "https://585.ink/" },
+    { "slug": "tool", "label": "工具站示例", "url": "https://2002cs.com/" },
     { "slug": "nav", "label": "导航站示例", "url": "https://xuliming.com/" },
-    { "slug": "blog", "label": "博客站示例", "url": "https://xuliming.com/" }
+    { "slug": "blog", "label": "博客站示例", "url": "https://zangeng.com/" }
   ],
   "note": "把下面的示例演示站地址替换成你自己的真实运营站点，即可在套件内展示推广。每个示例（模板 / 文章）对应的网站地址会显示在对应页面，用于站外引流。"
 }
