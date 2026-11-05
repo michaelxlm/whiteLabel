@@ -1,0 +1,11 @@
+[
+  {
+    "slug": "first-post",
+    "title": "开篇：这个博客怎么运作",
+    "summary": "内容存在 data/posts.json，构建脚本生成静态文章页，改完在管理端点发布即可。",
+    "date": "2026-02-10",
+    "author": "站点主理人",
+    "tags": [ "随笔" ],
+    "content": "博客模板与内容模板共享同一套 SEO / 构建 / 埋点 / License 底座，只是页面层不同。\n\nMarkdown 风格的正文会按段落渲染，代码块与标题保留。想要真正的 Markdown 解析，可自行在 build.js 引入一个轻量解析器。"
+  }
+]

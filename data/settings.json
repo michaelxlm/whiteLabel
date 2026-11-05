@@ -1,0 +1,25 @@
+{
+  "siteName": "我的内容站",
+  "tagline": "分享有价值的原创内容",
+  "description": "这是一个由白标开店产品搭建的静态内容站，JSON 数据驱动、零后端依赖。",
+  "domain": "your-domain.com",
+  "language": "zh",
+  "theme": "auto",
+  "template": "content",
+  "author": "站点主理人",
+  "contactEmail": "hello@your-domain.com",
+  "icp": "",
+  "nav": [
+    { "title": "首页", "href": "/" },
+    { "title": "文章", "href": "/articles.html" },
+    { "title": "关于", "href": "/about.html" }
+  ],
+  "features": [
+    "零依赖纯静态 · 解压即用",
+    "每页 meta/canonical/hreflang 全 SEO 覆盖",
+    "sitemap.xml / robots.txt / JSON-LD 自动生成",
+    "明暗双主题 · 响应式 · 中英双语可选",
+    "广告位框架（内容由你自填）",
+    "本地访问埋点，数据只存你自己的服务器"
+  ]
+}

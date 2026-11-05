@@ -1,0 +1,17 @@
+# systemd 单元示例：把内容存为 /etc/systemd/system/white-label.service，然后 systemctl enable --now white-label
+[Unit]
+Description=White-Label Site Server
+After=network.target
+
+[Service]
+Type=simple
+# 换成你的实际安装路径与运行用户
+WorkingDirectory=/var/www/white-label
+ExecStart=/usr/bin/node server/index.js
+Environment=NODE_ENV=production
+Environment=PORT=8787
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

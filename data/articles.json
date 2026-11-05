@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "hello-static-site",
+    "title": "为什么选择纯静态站",
+    "summary": "纯静态站速度快、成本低、几乎不会宕机，是最适合个人与小微企业的建站方式。",
+    "tags": [ "建站", "性能" ],
+    "date": "2026-01-12",
+    "promoUrl": "https://xuliming.com/",
+    "promoLabel": "示例演示站 · xuliming.com",
+    "content": "纯静态站点的 HTML 在构建期就生成完毕，服务器只需要把文件吐给访客，没有数据库、没有运行时依赖。这意味着：极致的加载速度、极低的托管成本、近乎不可能宕机的稳定性。\n\n本脚手架把所有内容存在 data/*.json 里，构建脚本读取它们生成页面，你在管理端改完内容点一下「发布」即可重新出站。"
+  },
+  {
+    "slug": "seo-basics",
+    "title": "一次配好该配的 SEO",
+    "summary": "每页的 title / description / canonical / hreflang / JSON-LD 由构建脚本统一生成，无需手写。",
+    "tags": [ "SEO" ],
+    "date": "2026-01-20",
+    "promoUrl": "https://xuliming.com/",
+    "promoLabel": "示例演示站 · xuliming.com",
+    "content": "搜索引擎与 AI 爬虫都依赖结构化的元信息。本脚手架为每个页面生成完整的 head 元信息、sitemap.xml、robots.txt 与 JSON-LD（WebPage / BreadcrumbList / Article），并在交付时默认放行主流 AI 爬虫 UA（GEO）。\n\n你只需要专注写内容，剩下的交给构建脚本。"
+  },
+  {
+    "slug": "monetize-with-ad-slots",
+    "title": "用广告位框架开始变现",
+    "summary": "页面预留了 ad-slot 组件挂点，展示与点击都会记进你本地的统计文件。",
+    "tags": [ "变现", "广告" ],
+    "date": "2026-02-01",
+    "promoUrl": "https://xuliming.com/",
+    "promoLabel": "示例演示站 · xuliming.com",
+    "content": "ads.json 里定义广告位（图片/文案/落地链接），构建时注入到页面的 [data-ad-slot] 容器。展示与点击事件通过本地 track 接口写进服务器上的 JSONL 文件，管理端「统计」页聚合展示。\n\n所有数据都留在你自己的服务器，不会上报到任何第三方。"
+  }
+]

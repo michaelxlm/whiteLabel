@@ -1,0 +1,22 @@
+{
+  "slots": [
+    {
+      "id": "top-banner",
+      "page": "all",
+      "type": "text",
+      "title": "在这里放你自己的推广",
+      "text": "广告位框架已就绪，编辑 data/ads.json 填入你的图文与落地链接即可上线。",
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "article-inline",
+      "page": "article",
+      "type": "card",
+      "title": "示例推荐位",
+      "text": "点击卡片可跳转到你配置的落地页，展示与点击都会进入本地统计。",
+      "url": "",
+      "image": ""
+    }
+  ]
+}

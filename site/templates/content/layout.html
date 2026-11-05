@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}" data-theme="{{THEME}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{DESCRIPTION}}">
+  <link rel="canonical" href="{{CANONICAL}}">
+  {{HREFLANG}}
+  <meta property="og:type" content="{{OG_TYPE}}">
+  <meta property="og:title" content="{{TITLE}}">
+  <meta property="og:description" content="{{DESCRIPTION}}">
+  <meta property="og:url" content="{{CANONICAL}}">
+  <meta property="og:site_name" content="{{SITENAME}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/tokens.css">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script>{{THEME_INLINE}}</script>
+  {{JSONLD}}
+</head>
+<body class="tpl-content">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">{{SITENAME}}</a>
+      <nav class="nav">{{NAV}}<button class="theme-toggle" type="button" aria-label="切换主题">◐</button></nav>
+    </div>
+  </header>
+  <main class="wrap">
+    {{BODY}}
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© <span id="y"></span> {{SITENAME}}</span>
+      <span>{{FOOTER_NOTE}}{{ICP}}</span>
+    </div>
+    <div class="wrap promo-foot">
+      <span>白标开店由 <a href="https://xuliming.com/white-label.html" target="_blank" rel="noopener">xuliming.com 白标开店</a> 提供 · 开源免费 · <a href="https://github.com/michaelxlm/whiteLabel" target="_blank" rel="noopener">GitHub 仓库</a></span>
+    </div>
+  </footer>
+  <script>window.__ADS={{{ADS_JSON}}};window.__LANG="{{LANG}}";</script>
+  <script src="/assets/license.js"></script>
+  <script src="/assets/theme.js"></script>
+  <script src="/assets/track.js"></script>
+  <script src="/assets/ad-slot.js"></script>
+  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+</body>
+</html>

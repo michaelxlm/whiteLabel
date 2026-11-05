@@ -1,0 +1,7 @@
+{
+  "tools": [
+    { "slug": "word-counter", "name": "字数统计器", "desc": "粘贴文本即时统计字数、字符数与段落数，全部在浏览器本地完成。" },
+    { "slug": "case-converter", "name": "英文大小写转换", "desc": "一键在 sentence case / UPPER / lower / Title Case 之间转换。" },
+    { "slug": "uuid-gen", "name": "UUID 生成器", "desc": "批量生成分布式唯一标识符，支持带/不带连字符两种格式。" }
+  ]
+}

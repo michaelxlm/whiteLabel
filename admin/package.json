@@ -1,0 +1,20 @@
+{
+  "name": "white-label-admin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "白标产品管理端（Vue 3 + Vite 独立工程）：内容 CRUD · 广告位 · 本地统计 · 站点设置 · License 状态 · 发布构建",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.2.0"
+  }
+}

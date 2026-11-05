@@ -1,0 +1,50 @@
+/* ==========================================================================
+ * tokens.css · 设计令牌（明暗双主题）
+ * 所有颜色/间距/字号都走 CSS 变量，theme.js 只切 data-theme 属性即可整体换肤。
+ * ========================================================================== */
+:root {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --maxw: 860px;
+  --space: 1rem;
+
+  /* 浅色主题 */
+  --bg: #ffffff;
+  --bg-elev: #f6f7f9;
+  --text: #1a1d21;
+  --text-soft: #5b6472;
+  --border: #e5e8ec;
+  --brand: #2f6fed;
+  --brand-soft: #eaf0fe;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 8px 24px rgba(16, 24, 40, .06);
+  --accent: #12b76a;
+}
+
+[data-theme="dark"] {
+  --bg: #0f1216;
+  --bg-elev: #171b21;
+  --text: #e7ebf0;
+  --text-soft: #9aa4b2;
+  --border: #262b33;
+  --brand: #6ea0ff;
+  --brand-soft: #17233c;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px rgba(0, 0, 0, .35);
+  --accent: #3ddc97;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1216;
+    --bg-elev: #171b21;
+    --text: #e7ebf0;
+    --text-soft: #9aa4b2;
+    --border: #262b33;
+    --brand: #6ea0ff;
+    --brand-soft: #17233c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px rgba(0, 0, 0, .35);
+    --accent: #3ddc97;
+  }
+}

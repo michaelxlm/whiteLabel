@@ -1,0 +1,13 @@
+# 构建产物与依赖（git clone 后由 node scripts/build.js 重新生成 dist，不入库）
+node_modules/
+dist/
+admin/node_modules/
+admin/dist/
+
+# 运行时数据（客户/本地生成，不入库）
+data/stats/
+server/admin-credentials.json
+
+# 系统
+.DS_Store
+*.log

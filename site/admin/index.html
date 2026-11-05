@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>内容管理 · 白标站点</title>
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<div class="wl-app">
+  <header class="wl-top">
+    <div class="wl-brand">内容管理</div>
+    <div class="wl-top-right">
+      <span id="lic-badge" class="wl-badge" hidden></span>
+      <button id="btn-logout" class="wl-btn ghost" hidden type="button">退出</button>
+    </div>
+  </header>
+
+  <!-- 登录视图 -->
+  <main id="view-login" class="wl-login">
+    <form id="login-form" class="wl-card">
+      <h1>管理员登录</h1>
+      <p class="wl-sub">口令在解压目录的 <code>server/admin-credentials.json</code></p>
+      <label>账号<input id="login-user" autocomplete="username" value="admin"></label>
+      <label>口令<input id="login-pass" type="password" autocomplete="current-password" required></label>
+      <button class="wl-btn primary" type="submit">登录</button>
+      <p id="login-msg" class="wl-msg"></p>
+    </form>
+  </main>
+
+  <!-- 管理视图 -->
+  <main id="view-app" class="wl-main" hidden>
+    <nav class="wl-tabs" id="tabs"></nav>
+    <section class="wl-panel" id="panel"></section>
+  </main>
+
+  <footer class="wl-foot">
+    <!--WL_FOOTER-->
+  </footer>
+</div>
+<script src="/admin/admin.js"></script>
+</body>
+</html>

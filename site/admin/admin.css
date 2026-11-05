@@ -1,0 +1,99 @@
+/* 白标内容管理端样式（零构建：原生 CSS，无 CDN/无外链字体，避免任何第三方域名） */
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --text: #1f2329;
+  --sub: #6b7280;
+  --line: #e5e7eb;
+  --primary: #2563eb;
+  --danger: #dc2626;
+  --ok: #059669;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --card: #1c1f24;
+    --text: #e6e8eb;
+    --sub: #9aa3af;
+    --line: #2b3037;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+code { background: rgba(127, 127, 127, .15); padding: 1px 5px; border-radius: 4px; }
+h1 { font-size: 18px; margin: 0 0 6px; }
+h2 { font-size: 15px; margin: 0 0 10px; }
+
+.wl-app { min-height: 100vh; display: flex; flex-direction: column; }
+.wl-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px; background: var(--card); border-bottom: 1px solid var(--line);
+}
+.wl-brand { font-weight: 600; }
+.wl-top-right { display: flex; align-items: center; gap: 10px; }
+.wl-badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--sub); }
+.wl-badge.ok { color: var(--ok); border-color: var(--ok); }
+.wl-badge.warn { color: var(--danger); border-color: var(--danger); }
+
+.wl-login { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+.wl-card { width: 340px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 22px; }
+.wl-sub { color: var(--sub); font-size: 12px; margin: 0 0 16px; }
+.wl-card label { display: block; font-size: 13px; color: var(--sub); margin-bottom: 10px; }
+.wl-card input {
+  width: 100%; margin-top: 4px; padding: 8px 10px; border: 1px solid var(--line);
+  border-radius: 6px; background: var(--bg); color: var(--text); font-size: 14px;
+}
+.wl-msg { margin: 10px 0 0; font-size: 13px; color: var(--danger); min-height: 18px; }
+
+.wl-btn {
+  cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--text);
+  padding: 7px 14px; border-radius: 6px; font-size: 13px;
+}
+.wl-btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; width: 100%; }
+.wl-btn.ghost { background: transparent; }
+.wl-btn.danger { color: var(--danger); border-color: var(--danger); }
+.wl-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.wl-main { flex: 1; display: flex; gap: 16px; padding: 16px 18px; align-items: flex-start; }
+.wl-tabs { display: flex; flex-direction: column; gap: 6px; width: 132px; flex: none; }
+.wl-tabs button {
+  text-align: left; padding: 8px 12px; border: 1px solid transparent; border-radius: 7px;
+  background: transparent; color: var(--sub); cursor: pointer; font-size: 13px;
+}
+.wl-tabs button.active { background: var(--card); border-color: var(--line); color: var(--text); font-weight: 600; }
+.wl-panel { flex: 1; min-width: 0; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+
+.wl-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.wl-row select, .wl-row input {
+  padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); color: var(--text); font-size: 13px;
+}
+.wl-hint { color: var(--sub); font-size: 12px; }
+.wl-mono {
+  width: 100%; min-height: 380px; resize: vertical; padding: 10px 12px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--bg); color: var(--text);
+  font: 12px/1.7 ui-monospace, Consolas, "Courier New", monospace;
+}
+.wl-status { font-size: 12px; margin-left: 4px; }
+.wl-status.ok { color: var(--ok); }
+.wl-status.err { color: var(--danger); }
+
+.wl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.wl-stat { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+.wl-stat b { display: block; font-size: 20px; }
+.wl-stat span { color: var(--sub); font-size: 12px; }
+.wl-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.wl-table th, .wl-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.wl-table th { color: var(--sub); font-weight: 500; }
+
+.wl-log {
+  white-space: pre-wrap; word-break: break-all; background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 12px; min-height: 220px; max-height: 420px; overflow: auto;
+  font: 12px/1.7 ui-monospace, Consolas, monospace; color: var(--sub);
+}
+.wl-foot { padding: 10px 18px 18px; color: var(--sub); font-size: 12px; }
