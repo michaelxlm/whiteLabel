@@ -83,6 +83,18 @@ h2 { font-size: 15px; margin: 0 0 10px; }
 .wl-status.ok { color: var(--ok); }
 .wl-status.err { color: var(--danger); }
 
+/* AI 助手 Tab 表单（WO-151） */
+.wl-ai { display: flex; flex-direction: column; max-width: 620px; }
+.wl-ai label { display: block; font-size: 13px; color: var(--sub); margin-top: 10px; }
+.wl-ai input[type=text], .wl-ai input[type=password], .wl-ai input[type=number], .wl-ai textarea {
+  display: block; width: 100%; margin-top: 4px; padding: 7px 9px; border: 1px solid var(--line);
+  border-radius: 6px; background: var(--bg); color: var(--text); font-size: 13px;
+}
+.wl-ai textarea { min-height: 60px; resize: vertical; font: 12px/1.7 ui-monospace, Consolas, "Courier New", monospace; }
+.wl-ai .wl-ai-json { min-height: 140px; }
+.wl-ai .wl-ai-enable { display: flex; align-items: center; gap: 6px; margin-top: 0; }
+.wl-ai .wl-ai-enable input { width: auto; margin: 0; }
+
 .wl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
 .wl-stat { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
 .wl-stat b { display: block; font-size: 20px; }

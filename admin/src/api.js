@@ -24,4 +24,7 @@ export const api = {
   license: () => req('GET', '/admin/api/license'),
   publish: () => req('POST', '/admin/api/publish', {}),
   publishStatus: () => req('GET', '/admin/api/publish/status'),
+  aiConfig: () => req('GET', '/admin/api/aiConfig'),
+  putAiConfig: (data) => req('POST', '/admin/api/aiConfig', { data }),
+  aiTest: () => req('POST', '/admin/api/aiTest', {}),
 };

@@ -7,6 +7,7 @@ import Dashboard from './views/Dashboard.vue';
 import Content from './views/Content.vue';
 import Ads from './views/Ads.vue';
 import Settings from './views/Settings.vue';
+import Ai from './views/Ai.vue';
 import License from './views/License.vue';
 import Publish from './views/Publish.vue';
 
@@ -20,6 +21,7 @@ const routes = [
       { path: 'content/:name', component: Content, props: true },
       { path: 'ads', component: Ads },
       { path: 'settings', component: Settings },
+      { path: 'ai', component: Ai },
       { path: 'license', component: License },
       { path: 'publish', component: Publish },
     ],

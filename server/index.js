@@ -6,7 +6,11 @@
  *     3) POST /track 公开埋点：把展示/点击事件按行写入 data/stats/events.jsonl（只落本地，绝不外发）；
  *     4) 本地统计聚合 GET /admin/api/stats（读回 jsonl 汇总，无我方看板）；
  *     5) 发布构建 POST /admin/api/publish：软校验 License（不阻断）后 spawn 构建脚本；
- *     6) 单管理员登录（打包时随机密码，见 credentials 说明）——登录时也做一次软校验。
+ *     6) 单管理员登录（打包时随机密码，见 credentials 说明）——登录时也做一次软校验；
+ *     7) AI 助手（WO-151）：POST /api/ai/chat 零依赖代理转发客户自配 OpenAI 兼容端点
+ *        （密钥只存本地 data/ai-config.json，失败 fail-soft 回落预置 FAQ），配
+ *        GET /api/ai/status（公开状态探测，不含凭据）、GET/POST /admin/api/aiConfig、
+ *        POST /admin/api/aiTest（鉴权）。
  *
  *   刻意不引 Express：交付包保持零 node_modules，解压即跑，也便于逐字节脱敏扫描。
  * ========================================================================== */
@@ -14,6 +18,7 @@
 'use strict';
 
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -63,6 +68,102 @@ const EDITABLE = [ 'articles', 'tools', 'navs', 'posts', 'ads', 'settings' ];
 function dataFile(name) { return path.join(DATA, name + '.json'); }
 function readData(name) { try { return JSON.parse(fs.readFileSync(dataFile(name), 'utf8')); } catch (e) { return null; } }
 function writeData(name, obj) { fs.writeFileSync(dataFile(name), JSON.stringify(obj, null, 2)); }
+
+/* --------------------------- AI 助手（WO-151） --------------------------- */
+// data/ai-config.json 为客户真实配置（含密钥，.gitignore 已排除、绝不入库）；
+// data/ai-config.example.json 为随包模板：本地配置缺失时回退读模板（enable 默认 false）。
+const AI_CONFIG_FILE = path.join(DATA, 'ai-config.json');
+const AI_EXAMPLE_FILE = path.join(DATA, 'ai-config.example.json');
+
+function normalizeAiConfig(raw) {
+  const src = raw && typeof raw === 'object' ? raw : {};
+  const str = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
+  const faqs = Array.isArray(src.faqs) ? src.faqs.slice(0, 50).map(f => ({
+    q: str(f && f.q, 200), a: str(f && f.a, 2000),
+    kw: Array.isArray(f && f.kw) ? f.kw.slice(0, 20).map(k => str(k, 50)).filter(Boolean) : [],
+  })).filter(f => f.q && f.a) : [];
+  let rate = Number(src.rateLimitPerMinute);
+  if (!Number.isFinite(rate) || rate < 1) rate = 12;
+  if (rate > 120) rate = 120;
+  return {
+    enable: !!src.enable,
+    baseURL: str(src.baseURL, 300),
+    apiKey: str(src.apiKey, 300),
+    model: str(src.model, 120),
+    systemPrompt: str(src.systemPrompt, 4000),
+    fallbackAnswer: str(src.fallbackAnswer, 1000) || 'AI 助手暂时不可用，欢迎访问站内文章。',
+    faqs,
+    rateLimitPerMinute: rate,
+  };
+}
+
+function readAiConfig() {
+  if (fs.existsSync(AI_CONFIG_FILE)) {
+    try { return normalizeAiConfig(JSON.parse(fs.readFileSync(AI_CONFIG_FILE, 'utf8'))); } catch (e) { /* 损坏时回退模板 */ }
+  }
+  return normalizeAiConfig(readDataSafe(AI_EXAMPLE_FILE));
+}
+
+// 朴素 FAQ 命中：关键词包含计分，零依赖、语义下限兑底。
+function matchFaq(faqs, question) {
+  const q = String(question || '').toLowerCase();
+  let best = null; let bestScore = 0;
+  (faqs || []).forEach(f => {
+    const keys = (f.kw && f.kw.length ? f.kw : [ f.q ]).map(k => String(k).toLowerCase());
+    let score = 0;
+    keys.forEach(k => { if (k && q.indexOf(k) >= 0) score++; });
+    if (score > bestScore) { bestScore = score; best = f; }
+  });
+  return bestScore > 0 ? best : null;
+}
+
+// 轻量 IP 滑动窗口限流（防访客狂刷烧客户 token；重启即清零，符合单进程轻场景）。
+const aiHits = new Map();
+function aiRateLimited(ip, limitPerMin) {
+  const now = Date.now();
+  const arr = (aiHits.get(ip) || []).filter(t => now - t < 60000);
+  if (arr.length >= limitPerMin) { aiHits.set(ip, arr); return true; }
+  arr.push(now); aiHits.set(ip, arr);
+  return false;
+}
+
+// 转发 OpenAI 兼容 /chat/completions（非流式）。baseURL 已含完整路径时不重复拼接。
+function requestOpenAiChat(cfg, messages) {
+  return new Promise((resolve, reject) => {
+    let u;
+    try { u = new URL(cfg.baseURL); } catch (e) { return reject(new Error('invalid baseURL')); }
+    let pth = u.pathname.replace(/\/+$/, '');
+    if (!/\/chat\/completions$/.test(pth)) pth += '/chat/completions';
+    const payload = JSON.stringify({ model: cfg.model, messages, stream: false });
+    const mod = u.protocol === 'http:' ? http : https;
+    const preq = mod.request({
+      method: 'POST', hostname: u.hostname, port: u.port || (u.protocol === 'http:' ? 80 : 443), path: pth,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey, 'Content-Length': Buffer.byteLength(payload) },
+      timeout: 15000,
+    }, pres => {
+      let raw = '';
+      pres.setEncoding('utf8');
+      pres.on('data', c => { raw += c; if (raw.length > 2e6) preq.destroy(); });
+      pres.on('end', () => {
+        if (pres.statusCode < 200 || pres.statusCode >= 300) return reject(new Error('upstream http ' + pres.statusCode));
+        try {
+          const j = JSON.parse(raw);
+          const ans = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+          if (!ans) return reject(new Error('empty upstream answer'));
+          resolve(String(ans));
+        } catch (e) { reject(new Error('bad upstream json')); }
+      });
+    });
+    preq.on('timeout', () => preq.destroy(new Error('upstream timeout')));
+    preq.on('error', err => reject(err));
+    preq.end(payload);
+  });
+}
+
+function aiFallbackAnswer(cfg, question) {
+  const faq = matchFaq(cfg.faqs, question);
+  return faq ? faq.a : cfg.fallbackAnswer;
+}
 
 /* --------------------------- 埋点写盘 --------------------------- */
 function appendEvent(evt) {
@@ -126,6 +227,39 @@ async function handle(req, res) {
     return json(res, ok ? 202 : 500, { ok });
   }
 
+  // AI 助手公开路由：状态探测只回开关态、不含任何凭据；纯静态托管下 404，组件自行隐藏
+  if (p === '/api/ai/status' && method === 'GET') {
+    const cfg = readAiConfig();
+    return json(res, 200, { enable: cfg.enable, configured: !!(cfg.baseURL && cfg.apiKey && cfg.model) });
+  }
+  if (p === '/api/ai/chat' && method === 'POST') {
+    const cfg = readAiConfig();
+    if (!cfg.enable) return json(res, 200, { answer: '', disabled: true });
+    if (aiRateLimited(req.socket && req.socket.remoteAddress || 'unknown', cfg.rateLimitPerMinute)) {
+      return json(res, 200, { answer: '提问太频繁啦，稍后再试～', fallback: true, limited: true });
+    }
+    const b = await readBody(req);
+    const question = String(b.question || '').slice(0, 500);
+    if (!question.trim()) return json(res, 400, { error: 'missing question' });
+    // 可选多轮：前端传 messages 时取最近 10 条合法 user/assistant 文本
+    const history = Array.isArray(b.messages)
+      ? b.messages.slice(-10).filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string').map(m => ({ role: m.role, content: m.content.slice(0, 1000) }))
+      : [];
+    if (!cfg.baseURL || !cfg.apiKey || !cfg.model) {
+      return json(res, 200, { answer: aiFallbackAnswer(cfg, question), fallback: true });
+    }
+    const messages = [];
+    if (cfg.systemPrompt) messages.push({ role: 'system', content: cfg.systemPrompt });
+    messages.push(...history, { role: 'user', content: question });
+    try {
+      const answer = await requestOpenAiChat(cfg, messages);
+      return json(res, 200, { answer });
+    } catch (e) {
+      // fail-soft：上游异常一律降级 FAQ/模板回答，绝不 5xx 炸前端
+      return json(res, 200, { answer: aiFallbackAnswer(cfg, question), fallback: true, reason: e.message });
+    }
+  }
+
   // 管理端登录
   if (p === '/admin/api/login' && method === 'POST') {
     const b = await readBody(req);
@@ -151,6 +285,27 @@ async function handle(req, res) {
       const lic = await licenseClient.verify().catch(() => ({ valid: true, checked: false, reason: 'skipped' }));
       const l = readDataSafe(path.join(ROOT, 'license.json'));
       return json(res, 200, { license: l, check: lic });
+    }
+
+    // AI 助手配置读写（本地单管理员场景，apiKey 只在回显给本人时出现）与连通测试
+    if (p === '/admin/api/aiConfig' && method === 'GET') {
+      return json(res, 200, { data: readAiConfig(), source: fs.existsSync(AI_CONFIG_FILE) ? 'local' : 'example' });
+    }
+    if (p === '/admin/api/aiConfig' && (method === 'POST' || method === 'PUT')) {
+      const b = await readBody(req);
+      if (!b || !Object.prototype.hasOwnProperty.call(b, 'data')) return json(res, 400, { error: 'missing data' });
+      fs.writeFileSync(AI_CONFIG_FILE, JSON.stringify(normalizeAiConfig(b.data), null, 2));
+      return json(res, 200, { ok: true });
+    }
+    if (p === '/admin/api/aiTest' && method === 'POST') {
+      const cfg = readAiConfig();
+      if (!cfg.baseURL || !cfg.apiKey || !cfg.model) return json(res, 200, { ok: false, error: 'baseURL / apiKey / model 未配置完整' });
+      try {
+        const answer = await requestOpenAiChat(cfg, [ { role: 'user', content: '请只回答两个字：已通' } ]);
+        return json(res, 200, { ok: true, echo: String(answer).slice(0, 100) });
+      } catch (e) {
+        return json(res, 200, { ok: false, error: e.message });
+      }
     }
 
     // 内容 CRUD

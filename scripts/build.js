@@ -39,6 +39,13 @@ const settings = readJson(path.join(DATA, 'settings.json'), {});
 const ads = readJson(path.join(DATA, 'ads.json'), { slots: [] });
 const promo = readJson(path.join(DATA, 'promo.json'), { examples: [] });
 
+// AI 助手引导区（WO-151）：示例演示站矩阵 + 数据服务/赏赞致谢链接，均为 <a> 链接、不产生运行时请求
+const AI_GUIDE = (promo.examples || []).slice(0, 4).map(e => ({ label: e.label || e.url, url: e.url }))
+  .concat([
+    { label: '数据 MCP 服务', url: 'https://xuliming.com/mcp.html' },
+    { label: '赏赞致谢', url: promo.brandUrl || 'https://xuliming.com/white-label.html' },
+  ]);
+
 const argv = process.argv.slice(2);
 const argOf = name => {
   const hit = argv.find(a => a.startsWith(`--${name}=`));
@@ -123,6 +130,7 @@ function renderLayout(layout, ctx) {
     .replace(/{{FOOTER_NOTE}}/g, attr(ctx.footerNote || ''))
     .replace(/{{ICP}}/g, settings.icp ? ' · ' + attr(settings.icp) : '')
     .replace(/{{ADS_JSON}}/g, JSON.stringify(ads.slots || []).replace(/</g, '\\u003c'))
+    .replace(/{{AI_GUIDE}}/g, JSON.stringify(AI_GUIDE).replace(/</g, '\\u003c'))
     .replace(/{{JSONLD}}/g, (ctx.jsonld || []).join('\n  '));
   // 水印层②：head 首个注释（只写指纹 + 订单号，不写邮箱明文）
   return html.replace('<head>', `<head>\n  <!-- build-licensee: ${LICENSEE_HASH} · order: ${ORDER_NO} · built: ${BUILT_AT} -->`);

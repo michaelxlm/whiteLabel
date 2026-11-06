@@ -10,6 +10,7 @@
         <router-link to="/content/posts">博文</router-link>
         <router-link to="/ads">广告位</router-link>
         <router-link to="/settings">站点设置</router-link>
+        <router-link to="/ai">AI 助手</router-link>
         <router-link to="/license">License</router-link>
         <router-link to="/publish">发布构建</router-link>
       </nav>

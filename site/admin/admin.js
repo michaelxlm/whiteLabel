@@ -5,6 +5,8 @@
  *   3) 统计：GET /admin/api/stats（本地 events.jsonl 聚合，数据不出你的服务器）
  *   4) License：GET /admin/api/license（软校验结果仅展示，不阻断任何操作）
  *   5) 发布：POST /admin/api/publish + 轮询 /admin/api/publish/status 查看构建日志
+ *   6) AI 助手：GET/POST /admin/api/aiConfig（读写 data/ai-config.json，保存即生效）
+ *      + POST /admin/api/aiTest（用已保存配置做一次连通测试）
  *   说明：交付包内置本页；admin/ 目录下的 Vue 源码为可选二次开发素材，不参与运行。
  * ========================================================================== */
 (function() {
@@ -22,6 +24,7 @@
   var TABS = [
     { id: 'content', label: '内容' },
     { id: 'stats', label: '统计' },
+    { id: 'ai', label: 'AI 助手' },
     { id: 'license', label: 'License' },
     { id: 'publish', label: '发布' },
   ];
@@ -128,6 +131,7 @@
     clear(panel);
     if (state.tab === 'content') renderContent(panel);
     else if (state.tab === 'stats') renderStats(panel);
+    else if (state.tab === 'ai') renderAi(panel);
     else if (state.tab === 'license') renderLicense(panel);
     else renderPublish(panel);
   }
@@ -255,6 +259,118 @@
       table('按页面', d.byPage);
       table('按广告位', d.bySlot);
       table('按天', d.days);
+    }, box);
+  }
+
+  /* ------------------------------ AI 助手 ------------------------------ */
+  function renderAi(panel) {
+    panel.appendChild(el('h2', '', 'AI 助手（自带 Key · 本地代理）'));
+    panel.appendChild(el('p', 'wl-hint',
+      '使用你自己的 OpenAI 兼容端点与密钥：请求由你的服务器直连你的模型，不经过任何第三方；密钥只写入服务器端 data/ai-config.json（已 gitignore）。保存即生效，无需重新发布。'));
+    var box = el('div', 'wl-ai');
+    panel.appendChild(box);
+
+    boot('/admin/api/aiConfig', function(r) {
+      var cfg = r.data || {};
+      var inputs = {};
+
+      function field(labelText, type, key) {
+        var lab = el('label', null, labelText);
+        var inp = document.createElement(type === 'textarea' ? 'textarea' : 'input');
+        if (type !== 'textarea') inp.type = type;
+        inp.value = cfg[key] === undefined || cfg[key] === null ? '' : cfg[key];
+        lab.appendChild(inp);
+        inputs[key] = inp;
+        return lab;
+      }
+
+      var enableLab = el('label', 'wl-ai-enable');
+      var enableInp = document.createElement('input');
+      enableInp.type = 'checkbox';
+      enableInp.checked = !!cfg.enable;
+      enableLab.appendChild(enableInp);
+      enableLab.appendChild(el('span', null, '开启 AI 助手（访客端出现悬浮气泡）'));
+      box.appendChild(enableLab);
+      inputs.enable = enableInp;
+
+      box.appendChild(field('baseURL（如 https://api.openai.com/v1）', 'text', 'baseURL'));
+      box.appendChild(field('apiKey（只存本地 ai-config.json）', 'password', 'apiKey'));
+      box.appendChild(field('model', 'text', 'model'));
+      box.appendChild(field('systemPrompt（人设与回答约束）', 'textarea', 'systemPrompt'));
+      box.appendChild(field('fallbackAnswer（未配模型或调用失败时的兜底回答）', 'textarea', 'fallbackAnswer'));
+
+      var faqLab = el('label', null, 'faqs（JSON 数组，[{q,a},...] 关键词兜底，最多 50 条）');
+      var faqTa = document.createElement('textarea');
+      faqTa.className = 'wl-ai-json';
+      faqTa.value = JSON.stringify(cfg.faqs || [], null, 2);
+      faqLab.appendChild(faqTa);
+      box.appendChild(faqLab);
+      inputs.faqs = faqTa;
+
+      box.appendChild(field('rateLimitPerMinute（单 IP 每分钟限流，1~120）', 'number', 'rateLimitPerMinute'));
+
+      if (r.source === 'example') {
+        box.appendChild(el('p', 'wl-hint', '当前展示的是交付包模板（ai-config.example.json），保存后才写入 data/ai-config.json 生效。'));
+      }
+
+      var row = el('div', 'wl-row');
+      row.style.marginTop = '12px';
+      var saveBtn = el('button', 'wl-btn primary', '保存');
+      saveBtn.type = 'button';
+      saveBtn.style.width = 'auto';
+      var testBtn = el('button', 'wl-btn', '保存并测试连接');
+      testBtn.type = 'button';
+      var status = el('span', 'wl-status');
+      row.appendChild(saveBtn);
+      row.appendChild(testBtn);
+      row.appendChild(status);
+      box.appendChild(row);
+
+      function setStatus(text, ok) { status.textContent = text; status.className = 'wl-status ' + (ok ? 'ok' : 'err'); }
+      function markDirty() { state.dirty = true; setStatus('未保存', false); }
+      Object.keys(inputs).forEach(function(k) {
+        inputs[k].addEventListener('input', markDirty);
+        if (inputs[k].type === 'checkbox') inputs[k].addEventListener('change', markDirty);
+      });
+
+      function collect() {
+        return {
+          enable: inputs.enable.checked,
+          baseURL: inputs.baseURL.value.trim(),
+          apiKey: inputs.apiKey.value.trim(),
+          model: inputs.model.value.trim(),
+          systemPrompt: inputs.systemPrompt.value,
+          fallbackAnswer: inputs.fallbackAnswer.value,
+          faqs: JSON.parse(inputs.faqs.value || '[]'),
+          rateLimitPerMinute: Number(inputs.rateLimitPerMinute.value) || 12,
+        };
+      }
+
+      saveBtn.addEventListener('click', function() {
+        var d;
+        try { d = collect(); } catch (e) { setStatus('faqs JSON 语法错误：' + e.message, false); return; }
+        saveBtn.disabled = true;
+        req('POST', '/admin/api/aiConfig', { data: d })
+          .then(function() { state.dirty = false; setStatus('已保存（立即生效，无需发布）', true); })
+          .catch(function(e) { setStatus(e.message, false); })
+          .then(function() { saveBtn.disabled = false; });
+      });
+
+      testBtn.addEventListener('click', function() {
+        var d;
+        try { d = collect(); } catch (e) { setStatus('faqs JSON 语法错误：' + e.message, false); return; }
+        saveBtn.disabled = true;
+        testBtn.disabled = true;
+        setStatus('保存并测试中…', true);
+        req('POST', '/admin/api/aiConfig', { data: d })
+          .then(function() { state.dirty = false; return req('POST', '/admin/api/aiTest', {}); })
+          .then(function(t) {
+            if (t.ok) { setStatus('连通正常：' + (t.echo || ''), true); }
+            else { setStatus('连通失败：' + (t.error || '未知原因'), false); }
+          })
+          .catch(function(e) { setStatus(e.message, false); })
+          .then(function() { saveBtn.disabled = false; testBtn.disabled = false; });
+      });
     }, box);
   }
 

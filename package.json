@@ -2,7 +2,7 @@
   "name": "white-label-site-kit",
   "version": "1.0.0",
   "private": true,
-  "description": "一次性买断白标产品：静态站脚手架 + SEO 全套 + 管理端 + 广告位框架 + 本地埋点。零中台依赖，解压即部署。",
+  "description": "一次性买断白标产品：静态站脚手架 + SEO 全套 + 管理端 + 广告位框架 + 本地埋点 + 自带 Key 的本地 AI 助手代理。零中台依赖，解压即部署。",
   "license": "UNLICENSED",
   "scripts": {
     "build": "node scripts/build.js",

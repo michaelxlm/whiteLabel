@@ -6,6 +6,7 @@ admin/dist/
 
 # 运行时数据（客户/本地生成，不入库）
 data/stats/
+data/ai-config.json
 server/admin-credentials.json
 
 # 系统
