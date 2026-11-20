@@ -82,11 +82,11 @@ whiteLabel/
 
 ## 赏赞支持
 
-本项目开源免费，**赏赞自愿，不是获取或使用的前置条件**。如果这套源码帮你省了事，可以扫码前往赏赞致谢页表示支持：
+本项目开源免费，**赏赞自愿，不是获取或使用的前置条件**。如果这套源码帮你省了事，可以扫码前往赏赞页表示支持（微信 / 支付宝均可，也可在页面登记留痕）：
 
 ![赏赞二维码](./docs/reward-qrcode.png)
 
-扫码打开 [赏赞致谢页](https://xuliming.com/white-label.html)。若你希望改成自己的收款码（微信 / 支付宝），把 `docs/reward-qrcode.png` 替换为你的收款二维码，并把本节的链接改成对应收款页即可。
+扫码打开 [赏赞页](https://api.xuyiheng.com/public/white-label.html)。若你希望改成自己的收款码（微信 / 支付宝），把 `docs/reward-qrcode.png` 替换为你的收款二维码，并把本节的链接改成对应收款页即可。
 
 ## License
 
