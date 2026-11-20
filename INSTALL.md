@@ -270,7 +270,7 @@ A：不会。软校验仅留痕不阻断；要彻底关掉外网校验见第八�
 A：可以。clone 多份、各自配置 `data/settings.json` 与域名即可；`license.json` 为开源公开授权，不设授权门槛。
 
 **Q：想换成自己的赏赞收款码？**
-A：替换 `docs/reward-qrcode.png` 为你的微信 / 支付宝收款二维码，并把 `README.md` 赏赞节的链接改成对应收款页。
+A：直接替换 `docs/reward-wechat.png`（微信）和 `docs/reward-alipay.png`（支付宝）两张图片即可，README 赏赞节会同步显示新码。
 
 ---
 

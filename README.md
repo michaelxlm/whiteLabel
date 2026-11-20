@@ -68,7 +68,7 @@ whiteLabel/
 ├── server/          零依赖 Node 服务（静态托管 + 内容 CRUD + 埋点 + 触发构建 + AI 代理）
 ├── dist/            构建产物（不入库；dist/admin/ 即开箱即用的管理端）
 ├── deploy/          Nginx / PM2 / systemd 部署参考 + deploy/README.md
-├── docs/            文档与图片资源（含赏赞二维码）
+├── docs/            文档与图片资源（含微信/支付宝收款码）
 ├── INSTALL.md       完整安装手册
 ├── license.json     开源公开授权信息（构建时注入三层标识）
 └── package.json     npm scripts 快捷入口
@@ -82,11 +82,15 @@ whiteLabel/
 
 ## 赏赞支持
 
-本项目开源免费，**赏赞自愿，不是获取或使用的前置条件**。如果这套源码帮你省了事，可以扫码前往赏赞页表示支持（微信 / 支付宝均可，也可在页面登记留痕）：
+本项目开源免费，**赏赞自愿，不是获取或使用的前置条件**。如果这套源码帮你省了事，可以扫码直接赏赞支持，金额完全自愿：
 
-![赏赞二维码](./docs/reward-qrcode.png)
+| 微信支付 | 支付宝 |
+| :---: | :---: |
+| ![微信收款码](./docs/reward-wechat.png) | ![支付宝收款码](./docs/reward-alipay.png) |
 
-扫码打开 [赏赞页](https://api.xuyiheng.com/public/white-label.html)。若你希望改成自己的收款码（微信 / 支付宝），把 `docs/reward-qrcode.png` 替换为你的收款二维码，并把本节的链接改成对应收款页即可。
+用微信 / 支付宝「扫一扫」扫描对应二维码，输入任意金额即可支付。支付后如需留痕（可选，仅作统计），可到 [赏赞登记页](https://api.xuyiheng.com/public/white-label.html) 填写。
+
+若你希望改成自己的收款码，直接替换 `docs/reward-wechat.png` / `docs/reward-alipay.png` 两张图片即可。
 
 ## License
 
