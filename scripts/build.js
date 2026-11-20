@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ==========================================================================
- * build.js · 白标静态站构建器（WO-122 交付物核心）
+ * build.js · 零站静态站构建器（WO-122 交付物核心）
  *   读 data/*.json → 按所选模板预渲染 → 注入 SEO(head/canonical/hreflang/JSON-LD) →
  *   生成 sitemap.xml / robots.txt → 注入三层水印 → 产出到 dist/。零第三方依赖，纯 Node。
  *

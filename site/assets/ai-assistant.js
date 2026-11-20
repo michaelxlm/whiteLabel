@@ -1,5 +1,5 @@
 /*!
- * ai-assistant.js · 白标 AI 助手悬浮问答组件（WO-151）
+ * ai-assistant.js · 零站 AI 助手悬浮问答组件（WO-151）
  * 装载：build.js 注入 <script src="/assets/ai-assistant.js" defer></script>（随页面构建产物）
  * 说明：
  *   - 仿中台 ai-widget.js（WO-146）的气泡 + 问答面板，ES5 零依赖、包内本地副本；

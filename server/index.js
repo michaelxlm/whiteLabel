@@ -1,5 +1,5 @@
 /* ==========================================================================
- * server/index.js · 白标本地服务（零第三方依赖，纯 Node 内置模块）
+ * server/index.js · 零站本地服务（零第三方依赖，纯 Node 内置模块）
  *   职责（客户自部署、自维护，我方不参与运行）：
  *     1) 静态托管 dist/（公开站 + 管理端 SPA 产物）；
  *     2) 内容 JSON 读写 API（articles/tools/navs/posts/ads/settings，管理端 CRUD 用）；
@@ -387,7 +387,7 @@ const server = http.createServer((req, res) => {
 
 if (require.main === module) {
   server.listen(PORT, () => {
-    console.log(`[server] 白标本地服务已启动 http://localhost:${PORT}`);
+    console.log(`[server] 零站本地服务已启动 http://localhost:${PORT}`);
     console.log(`[server] 管理端登录口令来源：${fs.existsSync(CREDS_FILE) ? 'server/admin-credentials.json' : '默认（本地开发）'}`);
   });
 }

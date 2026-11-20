@@ -20,7 +20,7 @@ const OUT = path.join(ROOT, 'dist');
 // 交付口径明确不带的东西：命中即视为信息泄露/越界，硬失败
 // （注：License 软校验口是服务端 license-client 的调用，公开页永不含我方域名；故这里扫描的是公开 dist）
 const FORBIDDEN = [
-  { re: /coupon/i, why: '优惠券腿（本产品在白标口径中已移除）' },
+  { re: /coupon/i, why: '优惠券腿（本产品在零站口径中已移除）' },
   { re: /api\.xuyiheng\.com/i, why: '我方中台域名（不得出现在公开页面）' },
   { re: /antucao\.com/i, why: '帮助/售后入口（交付物不得含任何支持引导）' },
 ];

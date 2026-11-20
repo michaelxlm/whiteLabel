@@ -1,7 +1,7 @@
 {
   "siteName": "我的内容站",
   "tagline": "分享有价值的原创内容",
-  "description": "这是一个由白标开店产品搭建的静态内容站，JSON 数据驱动、零后端依赖。",
+  "description": "这是一个由零站产品搭建的静态内容站，JSON 数据驱动、零后端依赖。",
   "domain": "your-domain.com",
   "language": "zh",
   "theme": "auto",

@@ -11,7 +11,7 @@ export default defineConfig({
   },
   server: {
     port: 5273,
-    // dev 时把 API 与埋点代理到本机白标服务，避免跨域
+    // dev 时把 API 与埋点代理到本机零站服务，避免跨域
     proxy: {
       '/admin/api': 'http://localhost:8787',
       '/track': 'http://localhost:8787',

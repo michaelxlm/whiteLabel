@@ -1,5 +1,5 @@
 ---
-title: 白标套件部署说明（开源版）
+title: 零站部署说明（开源版）
 owner: Michaelxlm
 updated: 2026-11-06
 scope: white-label
@@ -82,7 +82,7 @@ PORT=8787 node server/index.js
 
 ## 四、License 与推广说明
 
-- `license.json` 为**开源公开授权**（`key: WL-OPEN-SOURCE`），构建时注入三层标识（管理端页脚 / 每页 HTML 注释 / `assets/license.js` 指纹），署名统一为 `xuliming.com 白标开店`，用于品牌推广。
+- `license.json` 为**开源公开授权**（`key: WL-OPEN-SOURCE`），构建时注入三层标识（管理端页脚 / 每页 HTML 注释 / `assets/license.js` 指纹），署名统一为 `xuliming.com 零站`，用于品牌推广。
 - 管理端登录与发布时会做一次 License 软校验（`license-client.js` 调 `api.xuyiheng.com` 校验口）：即便校验未通过，站点与管理端**功能照常**，仅在控制台与 `data/stats/license.log` 留痕。若需完全离线，可在 `data/settings.json` 设 `"licenseCheck": false` 停用外网校验。
 - **代码示例推广**：套件内置的示例内容（文章 / 模板）对应真实的演示站点，地址配置在 `data/promo.json`。把其中的 URL 换成你自己的站点，即可在文章详情页与站点页脚展示引流链接。
 

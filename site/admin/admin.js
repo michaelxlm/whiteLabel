@@ -1,5 +1,5 @@
 /* ==========================================================================
- * 白标内容管理端（零构建版）：原生 JS，无需 npm install / 无打包步骤
+ * 零站内容管理端（零构建版）：原生 JS，无需 npm install / 无打包步骤
  *   1) 登录：POST /admin/api/login（口令来自 server/admin-credentials.json）
  *   2) 内容：GET/PUT /admin/api/{articles|tools|navs|posts|ads|settings}（整份 JSON 编辑）
  *   3) 统计：GET /admin/api/stats（本地 events.jsonl 聚合，数据不出你的服务器）
